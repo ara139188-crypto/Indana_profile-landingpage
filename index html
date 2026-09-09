@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naura Indana Halwah Raqikah | Underwater Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepSea: '#020b18',
+                        oceanBlue: '#0a2342',
+                        cyanGlow: '#00f2fe',
+                        coralPink: '#ff758c',
+                        seafoam: '#4facfe',
+                        aquamarine: '#00d2ff',
+                        abyssal: '#010610'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Quicksand', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Underwater Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020b18;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0d4b75;
+            border-radius: 6px;
+            border: 2px solid #020b18;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+
+        /* Glassmorphism Aquatic Panels */
+        .glass-panel {
+            background: rgba(10, 35, 66, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-card {
+            background: rgba(15, 50, 85, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(0, 242, 254, 0.6);
+            box-shadow: 0 16px 35px rgba(0, 242, 254, 0.22);
+        }
+
+        /* Bioluminescent Glow Text and Elements */
+        .text-glow {
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.7), 0 0 30px rgba(0, 242, 254, 0.4);
+        }
+
+        .text-glow-coral {
+            text-shadow: 0 0 15px rgba(255, 117, 140, 0.7);
+        }
+
+        .box-glow {
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
+        }
+
+        /* Light Rays Effect */
+        .light-rays {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% -20%, rgba(0, 242, 254, 0.18) 0%, transparent 75%),
+                        linear-gradient(180deg, rgba(2, 11, 24, 0) 0%, #020b18 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animated Seaweeds */
+        @keyframes sway {
+            0%, 100% { transform: rotate(-6deg); }
+            50% { transform: rotate(6deg); }
+        }
+
+        .seaweed-1 {
+            animation: sway 5s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+
+        .seaweed-2 {
+            animation: sway 7s infinite ease-in-out 1s;
+            transform-origin: bottom center;
+        }
+
+        /* Pulse wave animation */
+        @keyframes wavePulse {
+            0% { transform: scale(0.98); opacity: 0.8; }
+            50% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(0.98); opacity: 0.8; }
+        }
+
+        .pulse-aquatic {
+            animation: wavePulse 4s infinite ease-in-out;
+        }
+
+        /* Floating Jellyfish animation */
+        @keyframes floatJelly {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(4deg); }
+        }
+
+        .floating-jelly {
+            animation: floatJelly 6s ease-in-out infinite;
+        }
+
+        /* Shimmer effect for buttons */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .btn-shimmer {
+            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 50%, #00f2fe 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-deepSea text-slate-100 font-sans relative overflow-x-hidden selection:bg-cyanGlow selection:text-deepSea">
+
+    <!-- Canvas for Floating Bubbles & Glowing Plankton -->
+    <canvas id="oceanCanvas"></canvas>
+
+    <!-- Visual Light Rays Overlay -->
+    <div class="light-rays"></div>
+
+    <header class="fixed top-0 left-0 w-full z-50 px-4 py-4 transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto glass-panel rounded-full px-6 py-3 flex justify-between items-center border border-cyanGlow/30">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyanGlow to-seafoam flex items-center justify-center text-deepSea text-xl font-bold shadow-lg shadow-cyanGlow/30 group-hover:rotate-12 transition-transform">
+                    <i class="fa-solid fa-water"></i>
+                </div>
+                <span class="font-display font-bold text-lg tracking-wide text-white group-hover:text-cyanGlow transition-colors">
+                    Naura<span class="text-cyanGlow">.dev</span>
+                </span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
+                <a href="#beranda" class="hover:text-cyanGlow transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-compass text-xs text-cyanGlow"></i> Beranda
+                </a>
+                <a href="#tentang" class="hover:text-cyanGlow transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-user-astronaut text-xs text-cyanGlow"></i> Tentang
+                </a>
+                <a href="#skill" class="hover:text-cyanGlow transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-code text-xs text-cyanGlow"></i> Keahlian
+                </a>
+                <a href="#projek" class="hover:text-cyanGlow transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad text-xs text-cyanGlow"></i> Projek Game
+                </a>
+                <a href="#minigame" class="hover:text-cyanGlow transition-colors flex items-center gap-2 text-coralPink">
+                    <i class="fa-solid fa-gem text-xs"></i> Mini Game
+                </a>
+            </nav>
+
+            <!-- Audio & CTA Toggle -->
+            <div class="flex items-center gap-3">
+                <button id="soundToggleBtn" onclick="toggleOceanSound()" class="w-10 h-10 rounded-full glass-panel border border-cyanGlow/40 flex items-center justify-center text-cyanGlow hover:scale-110 transition-transform" title="Efek Suara Laut">
+                    <i id="soundIcon" class="fa-solid fa-volume-xmark"></i>
+                </button>
+                <a href="#kontak" class="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-cyanGlow to-seafoam text-deepSea font-semibold px-5 py-2 rounded-full text-sm hover:shadow-lg hover:shadow-cyanGlow/40 hover:scale-105 transition-all duration-300">
+                    <i class="fa-solid fa-paper-plane"></i> Hubungi Saya
+                </a>
+                <!-- Mobile Menu Toggle -->
+                <button id="menuBtn" class="md:hidden text-cyanGlow text-2xl focus:outline-none p-1">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden max-w-6xl mx-auto mt-2 glass-panel rounded-2xl p-5 flex flex-col gap-4 text-center border border-cyanGlow/30">
+            <a href="#beranda" class="hover:text-cyanGlow py-2 border-b border-white/10">Beranda</a>
+            <a href="#tentang" class="hover:text-cyanGlow py-2 border-b border-white/10">Tentang Saya</a>
+            <a href="#skill" class="hover:text-cyanGlow py-2 border-b border-white/10">Keahlian</a>
+            <a href="#projek" class="hover:text-cyanGlow py-2 border-b border-white/10">Projek Game</a>
+            <a href="#minigame" class="hover:text-coralPink py-2 border-b border-white/10 text-coralPink font-semibold">Mini Game Laut</a>
+            <a href="#kontak" class="bg-cyanGlow text-deepSea font-bold py-2.5 rounded-xl mt-1 shadow-lg">Hubungi Saya</a>
+        </div>
+    </header>
+
+    <section id="beranda" class="relative z-10 min-h-screen flex items-center justify-center pt-28 pb-16 px-4">
+        <div class="max-w-5xl mx-auto text-center flex flex-col items-center">
+            
+            <!-- Subtitle Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyanGlow/40 text-cyanGlow text-xs sm:text-sm font-semibold mb-6 pulse-aquatic shadow-lg">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyanGlow animate-ping"></span>
+                <i class="fa-solid fa-fish-fins"></i> Siswi Rekayasa Perangkat Lunak (RPL)
+            </div>
+
+            <!-- Profile Avatar Frame with Aquatic Halo -->
+            <div class="relative mb-8 group cursor-pointer" onclick="createBubbleAtCenter()">
+                <div class="absolute -inset-1.5 bg-gradient-to-r from-cyanGlow via-seafoam to-coralPink rounded-full blur-lg opacity-80 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <div class="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-cyanGlow/50 bg-oceanBlue/90 p-2 flex items-center justify-center shadow-2xl">
+                    <!-- Avatar Underwater Character -->
+                    <div class="w-full h-full rounded-full bg-gradient-to-b from-cyan-950 via-deepSea to-oceanBlue flex flex-col items-center justify-center text-cyanGlow relative overflow-hidden">
+                        <i class="fa-solid fa-user-astronaut text-6xl sm:text-7xl mb-1 text-cyanGlow group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] font-mono tracking-widest text-cyanGlow/80 uppercase font-semibold">Developer RPL</span>
+                        
+                        <!-- Floating bubbles inside avatar frame -->
+                        <div class="absolute bottom-3 left-4 w-3 h-3 rounded-full bg-cyanGlow/40 animate-bounce"></div>
+                        <div class="absolute top-5 right-6 w-2 h-2 rounded-full bg-coralPink/50 animate-ping"></div>
+                    </div>
+                </div>
+                <!-- Submarine Anchor Badge -->
+                <div class="absolute bottom-1 right-1 bg-deepSea border-2 border-cyanGlow text-cyanGlow p-3 rounded-full shadow-xl hover:rotate-45 transition-transform">
+                    <i class="fa-solid fa-anchor text-base"></i>
+                </div>
+            </div>
+
+            <!-- Main Name Title -->
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-display font-extrabold tracking-tight mb-4 text-white">
+                Naura Indana <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyanGlow via-aquamarine to-seafoam text-glow">Halwah Raqikah</span>
+            </h1>
+
+            <!-- School & Major Tagline -->
+            <p class="text-base sm:text-xl text-slate-300 max-w-2xl font-light mb-8 leading-relaxed">
+                Mengembangkan ide kreatif menjadi kode interaktif di jurusan <strong class="text-cyanGlow font-semibold">Rekayasa Perangkat Lunak</strong> di <span class="text-white font-medium underline decoration-cyanGlow/50 underline-offset-4">SMK Farmasi Cendikia Farma Husada</span>.
+            </p>
+
+            <!-- CTA Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 sm:gap-6">
+                <a href="#projek" class="px-8 py-3.5 rounded-full btn-shimmer text-deepSea font-extrabold shadow-lg shadow-cyanGlow/30 hover:shadow-cyanGlow/50 hover:scale-105 transition-all flex items-center gap-3">
+                    <i class="fa-solid fa-gamepad"></i> Lihat Projek Game
+                </a>
+                <a href="#tentang" class="px-8 py-3.5 rounded-full glass-panel hover:bg-white/10 text-white font-semibold border border-cyanGlow/40 hover:border-cyanGlow transition-all flex items-center gap-3 shadow-md">
+                    <i class="fa-solid fa-compass text-cyanGlow"></i> Jelajahi Profil
+                </a>
+            </div>
+
+            <!-- Quick Stats Bar -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-3xl">
+                <div class="glass-panel p-5 rounded-2xl text-center border-t-2 border-t-cyanGlow">
+                    <p class="text-xs text-cyanGlow uppercase font-mono tracking-wider mb-1">Jurusan</p>
+                    <p class="text-lg font-bold text-white">RPL</p>
+                    <p class="text-[11px] text-slate-400">Rekayasa Perangkat Lunak</p>
+                </div>
+                <div class="glass-panel p-5 rounded-2xl text-center border-t-2 border-t-coralPink">
+                    <p class="text-xs text-coralPink uppercase font-mono tracking-wider mb-1">Keahlian Utama</p>
+                    <p class="text-lg font-bold text-white">HTML & Laravel</p>
+                    <p class="text-[11px] text-slate-400">Frontend & Backend Web</p>
+                </div>
+                <div class="col-span-2 md:col-span-1 glass-panel p-5 rounded-2xl text-center border-t-2 border-t-seafoam">
+                    <p class="text-xs text-seafoam uppercase font-mono tracking-wider mb-1">Sekolah</p>
+                    <p class="text-lg font-bold text-white truncate">SMK Farmasi CFH</p>
+                    <p class="text-[11px] text-slate-400">Cendikia Farma Husada</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="tentang" class="relative z-10 py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-mono text-cyanGlow uppercase tracking-widest mb-2">
+                    <i class="fa-solid fa-water"></i> Penyelaman Informasi
+                </h2>
+                <h3 class="text-3xl sm:text-4xl font-display font-bold text-white">
+                    Tentang <span class="text-cyanGlow text-glow">Saya</span>
+                </h3>
+                <div class="w-16 h-1 bg-gradient-to-r from-cyanGlow to-transparent mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-12 gap-8 items-center">
+                <!-- Submarine Window Visual Card -->
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-sm glass-panel p-6 rounded-3xl border border-cyanGlow/40 text-center overflow-hidden shadow-2xl">
+                        <!-- Submarine Porthole Ring -->
+                        <div class="w-48 h-48 mx-auto rounded-full border-8 border-cyanGlow/30 p-2 relative flex items-center justify-center bg-deepSea/90 shadow-inner">
+                            <i class="fa-solid fa-school text-6xl text-cyanGlow/90"></i>
+                            
+                            <!-- Animated swimming fish around logo -->
+                            <div class="absolute inset-0 animate-spin" style="animation-duration: 14s;">
+                                <i class="fa-solid fa-fish text-coralPink text-base absolute top-2 left-1/2"></i>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <h4 class="font-bold text-lg text-white">SMK Farmasi CFH</h4>
+                            <p class="text-xs text-cyanGlow font-mono mt-1">Cendikia Farma Husada</p>
+                            <div class="mt-4 inline-block bg-cyanGlow/10 border border-cyanGlow/30 px-3 py-1.5 rounded-full text-xs text-cyanGlow font-medium">
+                                Konsentrasi Rekayasa Perangkat Lunak
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Description Card -->
+                <div class="md:col-span-7 flex flex-col justify-center gap-5">
+                    <div class="glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
+                        <h4 class="text-xl font-bold text-white mb-3 flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-cyanGlow/20 text-cyanGlow flex items-center justify-center text-sm shadow-md">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </span>
+                            Halo! Saya Naura 👋
+                        </h4>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                            Saya adalah seorang siswi yang antusias di <strong class="text-cyanGlow">SMK Farmasi Cendikia Farma Husada</strong>, mengambil konsentrasi keahlian <strong class="text-white">Rekayasa Perangkat Lunak (RPL)</strong>.
+                        </p>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                            Dunia pemrograman membuka peluang luas bagi saya untuk merancang aplikasi modern, web interaktif, hingga game sederhana. Saya fokus mendalami pemrograman antarmuka web serta pemrosesan *backend* berbasis Laravel.
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/10">
+                            <div>
+                                <p class="text-xs text-slate-400">Minat Utama</p>
+                                <p class="text-sm font-semibold text-cyanGlow mt-0.5">Web Dev & Game Design</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400">Status</p>
+                                <p class="text-sm font-semibold text-emerald-400 mt-0.5">Aktif Belajar & Berkarya</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="skill" class="relative z-10 py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-mono text-cyanGlow uppercase tracking-widest mb-2">
+                    <i class="fa-solid fa-code"></i> Kedalaman Teknologi
+                </h2>
+                <h3 class="text-3xl sm:text-4xl font-display font-bold text-white">
+                    Keahlian <span class="text-cyanGlow text-glow">Pemrograman</span>
+                </h3>
+                <p class="text-slate-400 text-sm mt-2 max-w-md mx-auto">
+    
